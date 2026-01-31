@@ -1,0 +1,78 @@
+services:
+  admin-app:
+    container_name: admin-app
+    build:
+      context: .
+      dockerfile: docker/dev/php/Dockerfile
+      target: php-runtime
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    command: php-fpm
+    environment:
+      APP_NAME: ${APP_NAME}
+      APP_ENV: ${APP_ENV}
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_URL: ${APP_URL}
+      DB_HOST: admin-db
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      USERS_SERVICE_URL: ${USERS_SERVICE_URL}
+      USERS_SERVICE_API_KEY: ${USERS_SERVICE_API_KEY}
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - admin-db
+    expose:
+      - "9000"
+    networks:
+      - admin-internal
+      - microservices
+
+  admin-nginx:
+    container_name: admin-nginx
+    image: nginx:1.27
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/dev/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin.rule=Host(`${APP_DOMAIN}`)"
+      - "traefik.http.routers.admin.entrypoints=websecure"
+      - "traefik.http.routers.admin.tls=true"
+      - "traefik.http.services.admin.loadbalancer.server.port=80"
+    depends_on:
+      - admin-app
+    networks:
+      - admin-internal
+      - web
+
+  admin-db:
+    container_name: admin-db
+    image: mysql:8
+    ports:
+      - "127.0.0.1:3309:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - admin_db_data:/var/lib/mysql
+    networks:
+      - admin-internal
+
+networks:
+  admin-internal:
+    driver: bridge
+  web:
+    external: true
+  microservices:
+    external: true
+
+volumes:
+  admin_db_data:
