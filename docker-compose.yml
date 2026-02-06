@@ -26,7 +26,8 @@ services:
     volumes:
       - ./src:/var/www/html
     depends_on:
-      - admin-db
+      admin-db:
+        condition: service_healthy
     expose:
       - "9000"
     networks:
@@ -46,7 +47,14 @@ services:
       - "traefik.http.routers.admin.tls=true"
       - "traefik.http.services.admin.loadbalancer.server.port=80"
     depends_on:
-      - admin-app
+      admin-app:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/80'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     networks:
       - admin-internal
       - web
@@ -63,6 +71,12 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - admin_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     networks:
       - admin-internal
 
