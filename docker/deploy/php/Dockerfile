@@ -5,8 +5,8 @@ FROM node:22-alpine AS build-frontend
 
 WORKDIR /app
 
-COPY src/package.json ./
-RUN npm install
+COPY src/package.json src/package-lock.json ./
+RUN npm ci
 
 COPY src/resources ./resources
 COPY src/vite.config.* ./
