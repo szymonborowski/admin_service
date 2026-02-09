@@ -12,10 +12,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - admin.portfolio.local
+        - admin.portfolio.kube
       secretName: admin-tls
   rules:
-    - host: admin.portfolio.local
+    - host: admin.portfolio.kube
       http:
         paths:
           - path: /
