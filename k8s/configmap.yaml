@@ -15,7 +15,7 @@ data:
   DB_CONNECTION: "mysql"
   DB_HOST: "admin-mysql"
   DB_PORT: "3306"
-  USERS_SERVICE_URL: "http://users:80"
+  USERS_API_URL_INTERNAL: "http://users:80"
 ---
 apiVersion: v1
 kind: ConfigMap
