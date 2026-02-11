@@ -40,4 +40,12 @@ return [
         'api_key' => env('USERS_SERVICE_API_KEY'),
     ],
 
+    'sso' => [
+        'url' => env('SSO_URL', 'https://sso.microservices.local'),
+        'internal_url' => env('SSO_INTERNAL_URL', 'http://sso-nginx'),
+        'client_id' => env('SSO_CLIENT_ID', 'admin-client'),
+        'client_secret' => env('SSO_CLIENT_SECRET'),
+        'redirect_uri' => env('SSO_REDIRECT_URI', 'https://admin.microservices.local/auth/sso/callback'),
+    ],
+
 ];

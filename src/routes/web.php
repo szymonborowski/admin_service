@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SsoCallbackController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -22,10 +23,4 @@ Route::get('/', function () {
     return redirect('/admin');
 });
 
-Route::get('/admin/logout', function () {
-    auth()->logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-
-    return redirect('/admin/login');
-});
+Route::get('/auth/sso/callback', [SsoCallbackController::class, 'callback']);
