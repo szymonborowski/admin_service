@@ -17,7 +17,7 @@ Browser ──▶ Traefik ──▶ Nginx ──▶ PHP-FPM (Laravel + Filament)
 
 ## Tech Stack
 
-- **Backend:** PHP 8.2 / Laravel 12
+- **Backend:** PHP 8.5 / Laravel 12
 - **Admin panel:** FilamentPHP 3.3
 - **Database:** MySQL 8
 - **Authentication:** SSO OAuth 2.0 (Authorization Code flow)
