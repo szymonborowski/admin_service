@@ -41,8 +41,7 @@ class ManageUsers extends Page implements HasForms
         $response = $service->getUsers();
 
         $this->users = $response['data'] ?? [];
-        $rolesResponse = $service->getRoles();
-        $this->roles = $rolesResponse['data'] ?? [];
+        $this->roles = $service->getRoles();
     }
 
     public function assignRole(): void
