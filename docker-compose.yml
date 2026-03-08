@@ -1,6 +1,5 @@
 services:
   admin-app:
-    container_name: admin-app
     build:
       context: .
       dockerfile: docker/dev/php/Dockerfile
@@ -40,7 +39,6 @@ services:
       - microservices
 
   admin-nginx:
-    container_name: admin-nginx
     image: nginx:1.27
     volumes:
       - ./src:/var/www/html
@@ -65,7 +63,6 @@ services:
       - web
 
   admin-db:
-    container_name: admin-db
     image: mysql:8
     ports:
       - "127.0.0.1:3309:3306"
