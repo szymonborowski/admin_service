@@ -10,12 +10,16 @@ data:
   APP_NAME: "Admin"
   APP_ENV: "production"
   APP_DEBUG: "false"
-  APP_URL: "https://admin.portfolio.local"
+  APP_URL: "https://admin.portfolio.kube"
   LOG_CHANNEL: "stderr"
   DB_CONNECTION: "mysql"
   DB_HOST: "admin-mysql"
   DB_PORT: "3306"
   USERS_API_URL_INTERNAL: "http://users:80"
+  SSO_URL: "https://sso.portfolio.kube"
+  SSO_INTERNAL_URL: "http://sso"
+  SSO_CLIENT_ID: "admin-client"
+  SSO_REDIRECT_URI: "https://admin.portfolio.kube/auth/sso/callback"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -31,18 +35,45 @@ data:
     server {
         listen 80;
         server_name _;
+
         root /var/www/html/public;
         index index.php;
 
+        # Health probes dla Kubernetes
+        location = /health { return 200 "ok\n"; add_header Content-Type text/plain; }
+        location = /ready  { return 200 "ok\n"; add_header Content-Type text/plain; }
+
+        # Vite build assets (fingerprinted filenames -- long cache)
+        location /build/ {
+            expires    1y;
+            add_header Cache-Control "public, immutable";
+            access_log off;
+            try_files  $uri =404;
+        }
+
+        # Static assets
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot)$ {
+            expires    30d;
+            add_header Cache-Control "public, no-transform";
+            access_log off;
+            try_files  $uri =404;
+        }
+
+        # Laravel front controller
         location / {
             try_files $uri $uri/ /index.php?$query_string;
         }
 
+        # PHP-FPM (sidecar -- same pod network namespace)
         location ~ \.php$ {
-            fastcgi_pass 127.0.0.1:9000;
-            fastcgi_index index.php;
-            fastcgi_param SCRIPT_FILENAME /var/www/html/public$fastcgi_script_name;
-            include fastcgi_params;
+            fastcgi_pass            127.0.0.1:9000;
+            fastcgi_index           index.php;
+            include                 fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+            fastcgi_param DOCUMENT_ROOT   $realpath_root;
+            fastcgi_buffers         16 16k;
+            fastcgi_buffer_size     32k;
+            fastcgi_read_timeout    60s;
         }
 
         location ~ /\.(?!well-known).* {

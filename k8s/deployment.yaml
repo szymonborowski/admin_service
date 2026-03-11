@@ -22,7 +22,7 @@ spec:
       terminationGracePeriodSeconds: 30
       initContainers:
         - name: copy-public
-          image: ghcr.io/szymonborowski/microservices-admin:v0.0.1
+          image: portfolio-admin:v0.0.3
           imagePullPolicy: Never
           command: ["sh", "-c", "cp -r /var/www/html/public/. /shared/public/"]
           securityContext:
@@ -31,7 +31,7 @@ spec:
             - name: public-files
               mountPath: /shared/public
         - name: migrate-and-seed
-          image: ghcr.io/szymonborowski/microservices-admin:v0.0.1
+          image: portfolio-admin:v0.0.3
           imagePullPolicy: Never
           command:
             - sh
@@ -56,7 +56,7 @@ spec:
               memory: 128Mi
       containers:
         - name: php-fpm
-          image: ghcr.io/szymonborowski/microservices-admin:v0.0.1
+          image: portfolio-admin:v0.0.3
           imagePullPolicy: Never
           ports:
             - containerPort: 9000
