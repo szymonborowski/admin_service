@@ -13,7 +13,7 @@ class AnalyticsApiService
     public function __construct()
     {
         $this->baseUrl = rtrim(config('services.analytics.url', 'http://analytics-nginx'), '/');
-        $this->apiKey  = config('services.analytics.internal_api_key', '');
+        $this->apiKey  = config('services.analytics.internal_api_key') ?? '';
     }
 
     /**
