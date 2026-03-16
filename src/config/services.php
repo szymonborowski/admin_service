@@ -40,6 +40,11 @@ return [
         'api_key' => env('USERS_SERVICE_API_KEY'),
     ],
 
+    'analytics' => [
+        'url'              => env('ANALYTICS_API_URL_INTERNAL', 'http://analytics-nginx'),
+        'internal_api_key' => env('ANALYTICS_INTERNAL_API_KEY'),
+    ],
+
     'sso' => [
         'url' => env('SSO_URL', 'https://sso.microservices.local'),
         'internal_url' => env('SSO_INTERNAL_URL', 'http://sso-nginx'),
