@@ -40,6 +40,11 @@ return [
         'api_key' => env('USERS_SERVICE_API_KEY'),
     ],
 
+    'blog' => [
+        'url' => env('BLOG_API_URL_INTERNAL', 'http://blog-nginx'),
+        'api_key' => env('BLOG_INTERNAL_API_KEY'),
+    ],
+
     'analytics' => [
         'url'              => env('ANALYTICS_API_URL_INTERNAL', 'http://analytics-nginx'),
         'internal_api_key' => env('ANALYTICS_INTERNAL_API_KEY'),
