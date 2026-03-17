@@ -140,17 +140,17 @@ class BlogApiService
         return [];
     }
 
-    public function addFeaturedPost(int $postId): ?array
+    public function addFeaturedPost(int $postId): array
     {
         $response = $this->request('POST', '/api/internal/featured-posts', [], [
             'post_id' => $postId,
         ]);
 
-        if ($response->successful()) {
-            return $response->json('data') ?? $response->json();
-        }
-
-        return null;
+        return [
+            'success' => $response->successful(),
+            'status'  => $response->status(),
+            'data'    => $response->json(),
+        ];
     }
 
     public function removeFeaturedPost(int $id): bool
