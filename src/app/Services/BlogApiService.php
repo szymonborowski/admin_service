@@ -16,66 +16,6 @@ class BlogApiService
         $this->apiKey = config('services.blog.api_key', '');
     }
 
-    public function getSlides(): array
-    {
-        $response = $this->request('GET', '/api/internal/slides');
-
-        if ($response->successful()) {
-            return $response->json('data') ?? [];
-        }
-
-        return [];
-    }
-
-    public function getSlide(int $id): ?array
-    {
-        $response = $this->request('GET', "/api/internal/slides/{$id}");
-
-        if ($response->successful()) {
-            return $response->json('data') ?? $response->json();
-        }
-
-        return null;
-    }
-
-    public function createSlide(array $data): ?array
-    {
-        $response = $this->request('POST', '/api/internal/slides', [], $data);
-
-        if ($response->successful()) {
-            return $response->json('data') ?? $response->json();
-        }
-
-        return null;
-    }
-
-    public function updateSlide(int $id, array $data): ?array
-    {
-        $response = $this->request('PUT', "/api/internal/slides/{$id}", [], $data);
-
-        if ($response->successful()) {
-            return $response->json('data') ?? $response->json();
-        }
-
-        return null;
-    }
-
-    public function deleteSlide(int $id): bool
-    {
-        $response = $this->request('DELETE', "/api/internal/slides/{$id}");
-
-        return $response->successful();
-    }
-
-    public function reorderSlides(array $slides): bool
-    {
-        $response = $this->request('PATCH', '/api/internal/slides/reorder', [], [
-            'slides' => $slides,
-        ]);
-
-        return $response->successful();
-    }
-
     // Posts
 
     public function getPosts(array $query = []): array
