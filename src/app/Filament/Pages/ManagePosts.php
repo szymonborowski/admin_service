@@ -19,6 +19,7 @@ class ManagePosts extends Page
     public int $currentPage = 1;
     public string $search = '';
     public string $statusFilter = '';
+    public string $localeFilter = '';
 
     // Modal
     public bool $showPostModal = false;
@@ -31,6 +32,7 @@ class ManagePosts extends Page
     public string $postExcerpt = '';
     public string $postContent = '';
     public string $postStatus = 'draft';
+    public string $postLocale = 'pl';
     public string $postPublishedAt = '';
     public array $postCategoryIds = [];
     public array $postTagIds = [];
@@ -66,6 +68,10 @@ class ManagePosts extends Page
             $query['status'] = $this->statusFilter;
         }
 
+        if ($this->localeFilter !== '') {
+            $query['locale'] = $this->localeFilter;
+        }
+
         $result = $service->getPosts($query);
         $this->posts = $result['data'] ?? [];
         $this->meta = $result['meta'] ?? [];
@@ -78,6 +84,12 @@ class ManagePosts extends Page
     }
 
     public function updatedStatusFilter(): void
+    {
+        $this->currentPage = 1;
+        $this->loadPosts();
+    }
+
+    public function updatedLocaleFilter(): void
     {
         $this->currentPage = 1;
         $this->loadPosts();
@@ -123,6 +135,7 @@ class ManagePosts extends Page
         $this->postPublishedAt = isset($post['published_at'])
             ? \Carbon\Carbon::parse($post['published_at'])->format('Y-m-d\TH:i')
             : '';
+        $this->postLocale = $post['locale'] ?? 'pl';
         $this->postCategoryIds = collect($post['categories'] ?? [])->pluck('id')->map(fn($id) => (string) $id)->toArray();
         $this->postTagIds = collect($post['tags'] ?? [])->pluck('id')->map(fn($id) => (string) $id)->toArray();
 
@@ -152,6 +165,7 @@ class ManagePosts extends Page
             'excerpt'      => $this->postExcerpt ?: null,
             'content'      => $this->postContent,
             'status'       => $this->postStatus,
+            'locale'       => $this->postLocale,
             'published_at' => $this->postPublishedAt ?: null,
             'category_ids' => array_map('intval', $this->postCategoryIds),
             'tag_ids'      => array_map('intval', $this->postTagIds),
@@ -199,6 +213,7 @@ class ManagePosts extends Page
         $this->postExcerpt = '';
         $this->postContent = '';
         $this->postStatus = 'draft';
+        $this->postLocale = 'pl';
         $this->postPublishedAt = '';
         $this->postCategoryIds = [];
         $this->postTagIds = [];

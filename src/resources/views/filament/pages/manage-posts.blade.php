@@ -21,6 +21,15 @@
                     <option value="published">Published</option>
                     <option value="archived">Archived</option>
                 </select>
+
+                <select
+                    wire:model.live="localeFilter"
+                    class="rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm"
+                >
+                    <option value="">All locales</option>
+                    <option value="pl">PL</option>
+                    <option value="en">EN</option>
+                </select>
             </div>
 
             <x-filament::button
@@ -39,6 +48,8 @@
                         <tr>
                             <th class="px-4 py-3">Title</th>
                             <th class="px-4 py-3 w-28">Status</th>
+                            <th class="px-4 py-3 w-16 hidden sm:table-cell">Locale</th>
+                            <th class="px-4 py-3 w-16 hidden sm:table-cell">Ver.</th>
                             <th class="px-4 py-3 w-36 hidden md:table-cell">Categories</th>
                             <th class="px-4 py-3 w-36 hidden lg:table-cell">Published</th>
                             <th class="px-4 py-3 w-24">Actions</th>
@@ -50,6 +61,14 @@
                                 <td class="px-4 py-3">
                                     <div class="font-medium text-gray-900 dark:text-white">{{ $post['title'] }}</div>
                                     <div class="text-xs text-gray-400 mt-0.5">{{ $post['slug'] }}</div>
+                                </td>
+                                <td class="px-4 py-3 hidden sm:table-cell">
+                                    <span class="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 uppercase">
+                                        {{ $post['locale'] ?? 'pl' }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 hidden sm:table-cell text-gray-500 text-xs text-center">
+                                    v{{ $post['version'] ?? 1 }}
                                 </td>
                                 <td class="px-4 py-3">
                                     @php
@@ -97,7 +116,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-4 py-10 text-center text-gray-400">
+                                <td colspan="7" class="px-4 py-10 text-center text-gray-400">
                                     No posts found.
                                 </td>
                             </tr>
@@ -171,8 +190,8 @@
                     @error('postContent') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Status + Published At --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {{-- Status + Published At + Locale --}}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Status <span class="text-red-500">*</span></label>
                         <select
@@ -182,6 +201,16 @@
                             <option value="draft">Draft</option>
                             <option value="published">Published</option>
                             <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Language</label>
+                        <select
+                            wire:model.live="postLocale"
+                            class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm"
+                        >
+                            <option value="pl">Polish (PL)</option>
+                            <option value="en">English (EN)</option>
                         </select>
                     </div>
                     <div>
