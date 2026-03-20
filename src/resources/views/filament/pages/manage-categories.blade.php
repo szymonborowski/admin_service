@@ -39,19 +39,11 @@
                                 <td class="px-4 py-3">
                                     @php
                                         $colorName = $category['color'] ?? '';
-                                        $colorPreview = match($colorName) {
-                                            'violet'  => 'bg-violet-500',
-                                            'blue'    => 'bg-blue-500',
-                                            'emerald' => 'bg-emerald-500',
-                                            'amber'   => 'bg-amber-500',
-                                            'rose'    => 'bg-rose-500',
-                                            'cyan'    => 'bg-cyan-500',
-                                            default   => 'bg-gray-400',
-                                        };
+                                        $colorHex = \App\Filament\Pages\ManageCategories::colorHex($colorName);
                                     @endphp
                                     <div class="flex items-center gap-2">
-                                        <span class="w-3 h-3 rounded-full {{ $colorPreview }}"></span>
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ $colorName ?: 'gray' }}</span>
+                                        <span class="w-3 h-3 rounded-full" style="background-color: {{ $colorHex }}"></span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ $colorName ?: 'default' }}</span>
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 hidden md:table-cell text-gray-500 text-xs">
@@ -121,15 +113,7 @@
                 <div class="flex flex-wrap gap-2">
                     @foreach(\App\Filament\Pages\ManageCategories::$availableColors as $value => $label)
                         @php
-                            $dotColor = match($value) {
-                                'violet'  => 'bg-violet-500',
-                                'blue'    => 'bg-blue-500',
-                                'emerald' => 'bg-emerald-500',
-                                'amber'   => 'bg-amber-500',
-                                'rose'    => 'bg-rose-500',
-                                'cyan'    => 'bg-cyan-500',
-                                default   => 'bg-gray-400',
-                            };
+                            $hex = \App\Filament\Pages\ManageCategories::colorHex($value);
                             $isSelected = $categoryColor === $value;
                         @endphp
                         <button
@@ -140,7 +124,7 @@
                                     ? 'border-primary-500 bg-primary-50 dark:bg-primary-500/10 text-primary-700 dark:text-primary-300 ring-1 ring-primary-500'
                                     : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5' }}"
                         >
-                            <span class="w-3 h-3 rounded-full {{ $dotColor }}"></span>
+                            <span class="w-3 h-3 rounded-full" style="background-color: {{ $hex }}"></span>
                             {{ $label }}
                         </button>
                     @endforeach

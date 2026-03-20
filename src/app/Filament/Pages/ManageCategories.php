@@ -29,14 +29,47 @@ class ManageCategories extends Page
     public ?int $categoryParentId = null;
 
     public static array $availableColors = [
-        ''        => 'Default (gray)',
-        'violet'  => 'Violet',
-        'blue'    => 'Blue',
-        'emerald' => 'Emerald',
+        ''        => 'Default',
+        'slate'   => 'Slate',
+        'red'     => 'Red',
+        'orange'  => 'Orange',
         'amber'   => 'Amber',
-        'rose'    => 'Rose',
+        'yellow'  => 'Yellow',
+        'lime'    => 'Lime',
+        'emerald' => 'Emerald',
+        'teal'    => 'Teal',
         'cyan'    => 'Cyan',
+        'sky'     => 'Sky',
+        'blue'    => 'Blue',
+        'indigo'  => 'Indigo',
+        'violet'  => 'Violet',
+        'purple'  => 'Purple',
+        'pink'    => 'Pink',
+        'rose'    => 'Rose',
     ];
+
+    public static function colorHex(string $color): string
+    {
+        return match($color) {
+            'slate'   => '#64748b',
+            'red'     => '#ef4444',
+            'orange'  => '#f97316',
+            'amber'   => '#f59e0b',
+            'yellow'  => '#eab308',
+            'lime'    => '#84cc16',
+            'emerald' => '#10b981',
+            'teal'    => '#14b8a6',
+            'cyan'    => '#06b6d4',
+            'sky'     => '#0ea5e9',
+            'blue'    => '#3b82f6',
+            'indigo'  => '#6366f1',
+            'violet'  => '#8b5cf6',
+            'purple'  => '#a855f7',
+            'pink'    => '#ec4899',
+            'rose'    => '#f43f5e',
+            default   => '#9ca3af',
+        };
+    }
 
     public function mount(): void
     {
