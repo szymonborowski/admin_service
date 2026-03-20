@@ -16,6 +16,7 @@ data:
   DB_HOST: "admin-mysql"
   DB_PORT: "3306"
   USERS_API_URL_INTERNAL: "http://users:80"
+  BLOG_API_URL_INTERNAL: "http://blog"
   ANALYTICS_API_URL_INTERNAL: "http://analytics"
   SSO_URL: "https://sso.borowski.services"
   SSO_INTERNAL_URL: "http://sso"
