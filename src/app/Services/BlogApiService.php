@@ -131,6 +131,17 @@ class BlogApiService
         return null;
     }
 
+    public function updateCategory(int $id, array $data): array
+    {
+        $response = $this->request('PUT', "/api/internal/categories/{$id}", [], $data);
+
+        if ($response->successful()) {
+            return ['success' => true, 'data' => $response->json('data') ?? $response->json()];
+        }
+
+        return ['success' => false, 'status' => $response->status(), 'body' => $response->json()];
+    }
+
     public function deleteCategory(int $id): bool
     {
         return $this->request('DELETE', "/api/internal/categories/{$id}")->successful();
