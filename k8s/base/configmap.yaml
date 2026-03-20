@@ -20,6 +20,7 @@ data:
   SSO_INTERNAL_URL: "http://sso"
   SSO_CLIENT_ID: "admin-client"
   SSO_REDIRECT_URI: "https://admin.borowski.services/auth/sso/callback"
+  SESSION_DOMAIN: "admin.borowski.services"
 ---
 apiVersion: v1
 kind: ConfigMap
