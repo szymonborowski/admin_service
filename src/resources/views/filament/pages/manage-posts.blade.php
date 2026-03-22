@@ -181,12 +181,31 @@
                 {{-- Content --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Content <span class="text-red-500">*</span></label>
-                    <textarea
-                        wire:model.live="postContent"
-                        rows="12"
-                        class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm font-mono"
-                        placeholder="Post content (HTML/Markdown)..."
-                    ></textarea>
+                    <div wire:ignore>
+                        <div
+                            x-data="{ editor: null }"
+                            x-init="
+                                editor = new EasyMDE({
+                                    element: $refs.mde,
+                                    initialValue: $wire.postContent ?? '',
+                                    spellChecker: false,
+                                    toolbar: ['bold','italic','heading-1','heading-2','|','quote','code','|','unordered-list','ordered-list','|','link','|','preview','guide'],
+                                    minHeight: '280px',
+                                    placeholder: 'Post content (Markdown)...',
+                                });
+                                editor.codemirror.on('change', () => {
+                                    $wire.set('postContent', editor.value(), false);
+                                });
+                                $wire.$watch('postContent', value => {
+                                    if (editor.value() !== value) {
+                                        editor.value(value ?? '');
+                                    }
+                                });
+                            "
+                        >
+                            <textarea x-ref="mde"></textarea>
+                        </div>
+                    </div>
                     @error('postContent') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                 </div>
 
