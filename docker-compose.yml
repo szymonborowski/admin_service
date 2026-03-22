@@ -35,6 +35,7 @@ services:
       SSO_REDIRECT_URI: ${SSO_REDIRECT_URI}
     volumes:
       - ./src:/var/www/html
+      - admin_vendor:/var/www/html/vendor
     depends_on:
       admin-db:
         condition: service_healthy
@@ -116,3 +117,4 @@ networks:
 
 volumes:
   admin_db_data:
+  admin_vendor:
