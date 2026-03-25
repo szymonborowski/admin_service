@@ -47,6 +47,7 @@
                     <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-800">
                         <tr>
                             <th class="px-4 py-3">Title</th>
+                            <th class="px-4 py-3 w-32 hidden lg:table-cell">Author</th>
                             <th class="px-4 py-3 w-28">Status</th>
                             <th class="px-4 py-3 w-16 hidden sm:table-cell">Locale</th>
                             <th class="px-4 py-3 w-16 hidden sm:table-cell">Ver.</th>
@@ -61,6 +62,9 @@
                                 <td class="px-4 py-3">
                                     <div class="font-medium text-gray-900 dark:text-white">{{ $post['title'] }}</div>
                                     <div class="text-xs text-gray-400 mt-0.5">{{ $post['slug'] }}</div>
+                                </td>
+                                <td class="px-4 py-3 hidden lg:table-cell text-gray-500 dark:text-gray-400 text-xs">
+                                    {{ $post['author']['name'] ?? '—' }}
                                 </td>
                                 <td class="px-4 py-3 hidden sm:table-cell">
                                     <span class="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 uppercase">
@@ -116,7 +120,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-4 py-10 text-center text-gray-400">
+                                <td colspan="8" class="px-4 py-10 text-center text-gray-400">
                                     No posts found.
                                 </td>
                             </tr>
