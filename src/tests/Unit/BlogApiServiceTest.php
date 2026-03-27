@@ -187,8 +187,8 @@ class BlogApiServiceTest extends TestCase
 
         $result = app(BlogApiService::class)->createCategory(['name' => 'DevOps', 'slug' => 'devops']);
 
-        $this->assertNotNull($result);
-        $this->assertEquals('DevOps', $result['name']);
+        $this->assertTrue($result['success']);
+        $this->assertEquals('DevOps', $result['data']['name']);
     }
 
     #[Test]
@@ -196,7 +196,8 @@ class BlogApiServiceTest extends TestCase
     {
         Http::fake(['blog-nginx/api/internal/categories' => Http::response(null, 422)]);
 
-        $this->assertNull(app(BlogApiService::class)->createCategory(['name' => 'X']));
+        $result = app(BlogApiService::class)->createCategory(['name' => 'X']);
+        $this->assertFalse($result['success']);
     }
 
     #[Test]
