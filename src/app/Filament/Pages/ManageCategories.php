@@ -26,6 +26,7 @@ class ManageCategories extends Page
     public string $categoryName = '';
     public string $categorySlug = '';
     public string $categoryColor = '';
+    public string $categoryIcon = '';
     public ?int $categoryParentId = null;
 
     public static array $availableColors = [
@@ -99,6 +100,7 @@ class ManageCategories extends Page
         $this->categoryName = $category['name'] ?? '';
         $this->categorySlug = $category['slug'] ?? '';
         $this->categoryColor = $category['color'] ?? '';
+        $this->categoryIcon = $category['icon'] ?? '';
         $this->categoryParentId = $category['parent_id'] ?? null;
 
         $this->isEditing = true;
@@ -123,6 +125,7 @@ class ManageCategories extends Page
             'name'      => $this->categoryName,
             'slug'      => $this->categorySlug,
             'color'     => $this->categoryColor ?: null,
+            'icon'      => $this->categoryIcon ?: null,
             'parent_id' => $this->categoryParentId,
         ];
 
@@ -136,7 +139,7 @@ class ManageCategories extends Page
             $message = 'Category created successfully';
         }
 
-        $success = is_array($result) ? ($result['success'] ?? $result !== null) : (bool) $result;
+        $success = $result['success'] ?? false;
 
         if ($success) {
             Notification::make()->title($message)->success()->send();
@@ -171,6 +174,7 @@ class ManageCategories extends Page
         $this->categoryName = '';
         $this->categorySlug = '';
         $this->categoryColor = '';
+        $this->categoryIcon = '';
         $this->categoryParentId = null;
     }
 }

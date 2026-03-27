@@ -120,15 +120,15 @@ class BlogApiService
         return [];
     }
 
-    public function createCategory(array $data): ?array
+    public function createCategory(array $data): array
     {
         $response = $this->request('POST', '/api/internal/categories', [], $data);
 
         if ($response->successful()) {
-            return $response->json('data') ?? $response->json();
+            return ['success' => true, 'data' => $response->json('data') ?? $response->json()];
         }
 
-        return null;
+        return ['success' => false, 'status' => $response->status(), 'body' => $response->json()];
     }
 
     public function updateCategory(int $id, array $data): array

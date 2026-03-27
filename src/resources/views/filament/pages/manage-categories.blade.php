@@ -23,6 +23,7 @@
                             <th class="px-4 py-3">Name</th>
                             <th class="px-4 py-3 w-36">Slug</th>
                             <th class="px-4 py-3 w-28">Color</th>
+                            <th class="px-4 py-3 w-36 hidden md:table-cell">Icon</th>
                             <th class="px-4 py-3 w-28 hidden md:table-cell">Posts</th>
                             <th class="px-4 py-3 w-24">Actions</th>
                         </tr>
@@ -45,6 +46,9 @@
                                         <span class="w-3 h-3 rounded-full" style="background-color: {{ $colorHex }}"></span>
                                         <span class="text-xs text-gray-500 dark:text-gray-400">{{ $colorName ?: 'default' }}</span>
                                     </div>
+                                </td>
+                                <td class="px-4 py-3 hidden md:table-cell text-gray-500 text-xs font-mono">
+                                    {{ $category['icon'] ?? '—' }}
                                 </td>
                                 <td class="px-4 py-3 hidden md:table-cell text-gray-500 text-xs">
                                     {{ $category['posts_count'] ?? '—' }}
@@ -105,6 +109,16 @@
                     <x-filament::input type="text" wire:model.live="categorySlug" placeholder="category-slug" />
                 </x-filament::input.wrapper>
                 @error('categorySlug') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Icon --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Icon
+                    <span class="text-xs font-normal text-gray-400 ml-1">(Heroicons slug, np. <code>code-bracket</code>, <code>server</code>)</span>
+                </label>
+                <x-filament::input.wrapper>
+                    <x-filament::input type="text" wire:model.live="categoryIcon" placeholder="code-bracket" />
+                </x-filament::input.wrapper>
             </div>
 
             {{-- Color --}}
