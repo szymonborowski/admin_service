@@ -127,7 +127,8 @@ class UsersApiServiceTest extends TestCase
         $service = app(UsersApiService::class);
         $result = $service->getRoles();
 
-        $this->assertArrayHasKey('data', $result);
+        $this->assertCount(1, $result);
+        $this->assertEquals('admin', $result[0]['name']);
     }
 
     #[Test]

@@ -54,7 +54,7 @@ class UsersApiService
         $response = $this->request('GET', '/api/internal/roles');
 
         if ($response->successful()) {
-            return $response->json();
+            return $response->json('data') ?? [];
         }
 
         return [];
