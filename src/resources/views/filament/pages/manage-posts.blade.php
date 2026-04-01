@@ -194,7 +194,7 @@
                                     initialValue: $wire.postContent ?? '',
                                     spellChecker: false,
                                     toolbar: ['bold','italic','heading-1','heading-2','|','quote','code','|','unordered-list','ordered-list','|','link','|','preview','guide'],
-                                    minHeight: '280px',
+                                    minHeight: '320px',
                                     placeholder: 'Post content (Markdown)...',
                                 });
                                 editor.codemirror.on('change', () => {
