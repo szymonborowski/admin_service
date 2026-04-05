@@ -192,8 +192,24 @@
                                 editor = new EasyMDE({
                                     element: $refs.mde,
                                     initialValue: $wire.postContent ?? '',
+                                    autoDownloadFontAwesome: false,
                                     spellChecker: false,
-                                    toolbar: ['bold','italic','heading-1','heading-2','|','quote','code','|','unordered-list','ordered-list','|','link','|','preview','guide'],
+                                    toolbar: [
+                                        'bold','italic','heading-1','heading-2','|',
+                                        'quote','code','|',
+                                        'unordered-list','ordered-list','|',
+                                        'link',
+                                        {
+                                            name: 'insert-image',
+                                            action: () => {
+                                                $wire.openMediaPicker();
+                                                $dispatch('open-modal', { id: 'media-picker-modal' });
+                                            },
+                                            className: 'fa fa-image',
+                                            title: 'Insert Image',
+                                        },
+                                        '|','preview','guide'
+                                    ],
                                     minHeight: '320px',
                                     placeholder: 'Post content (Markdown)...',
                                 });
@@ -204,6 +220,12 @@
                                     if (editor.value() !== value) {
                                         editor.value(value ?? '');
                                     }
+                                });
+                                Livewire.on('insert-markdown-image', ({ alt, url }) => {
+                                    const cm = editor.codemirror;
+                                    const cursor = cm.getCursor();
+                                    cm.replaceRange('![' + alt + '](' + url + ')\n', cursor);
+                                    cm.focus();
                                 });
                             "
                         >
@@ -290,4 +312,74 @@
                 </x-filament::button>
             </x-slot>
         </x-filament::modal>
+
+    {{-- Media Picker Modal --}}
+    <x-filament::modal id="media-picker-modal" width="4xl">
+        <x-slot name="heading">
+            Insert Image
+        </x-slot>
+
+        <div class="space-y-4">
+            <x-filament::input.wrapper class="max-w-xs">
+                <x-filament::input
+                    type="search"
+                    wire:model.live.debounce.400ms="pickerSearch"
+                    placeholder="Search media..."
+                />
+            </x-filament::input.wrapper>
+
+            <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                @forelse($pickerMedia as $media)
+                    <button
+                        wire:click="selectMedia({{ $media['id'] }})"
+                        type="button"
+                        class="relative aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-primary-500 transition cursor-pointer"
+                        style="background: rgb(17,24,39)"
+                    >
+                        @if(str_starts_with($media['mime_type'], 'image/'))
+                            <img
+                                src="{{ $media['variant_urls']['thumbnail'] ?? $media['url'] }}"
+                                alt="{{ $media['alt'] ?? $media['filename'] }}"
+                                class="w-full h-full object-cover"
+                                loading="lazy"
+                            >
+                        @else
+                            <div class="w-full h-full flex items-center justify-center">
+                                <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                </svg>
+                            </div>
+                        @endif
+                        <div class="absolute bottom-0 inset-x-0 px-1.5 py-1 text-xs text-white truncate" style="background:rgba(0,0,0,0.6)">
+                            {{ $media['filename'] }}
+                        </div>
+                    </button>
+                @empty
+                    <div class="col-span-full py-8 text-center text-gray-400">
+                        No media found.
+                    </div>
+                @endforelse
+            </div>
+
+            @if(($pickerMeta['last_page'] ?? 1) > 1)
+                <div class="flex items-center justify-between text-sm text-gray-500">
+                    <span>Page {{ $pickerMeta['current_page'] ?? 1 }} of {{ $pickerMeta['last_page'] ?? 1 }}</span>
+                    <div class="flex gap-2">
+                        <x-filament::button wire:click="pickerPrevPage" color="gray" size="sm" :disabled="$pickerPage <= 1">
+                            Previous
+                        </x-filament::button>
+                        <x-filament::button wire:click="pickerNextPage" color="gray" size="sm" :disabled="$pickerPage >= ($pickerMeta['last_page'] ?? 1)">
+                            Next
+                        </x-filament::button>
+                    </div>
+                </div>
+            @endif
+        </div>
+
+        <x-slot name="footerActions">
+            <x-filament::button x-on:click="$dispatch('close-modal', { id: 'media-picker-modal' })" color="gray">
+                Cancel
+            </x-filament::button>
+        </x-slot>
+    </x-filament::modal>
 </x-filament-panels::page>

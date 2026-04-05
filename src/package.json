@@ -7,7 +7,8 @@
         "dev": "vite"
     },
     "dependencies": {
-        "easymde": "^2.18.0"
+        "easymde": "^2.18.0",
+        "font-awesome": "^4.7.0"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",

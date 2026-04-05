@@ -107,6 +107,54 @@ class BlogApiService
         return $response->successful();
     }
 
+    // Media
+
+    public function getMedia(array $query = []): array
+    {
+        $response = $this->request('GET', '/api/internal/media', $query);
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return ['data' => [], 'meta' => []];
+    }
+
+    public function uploadMedia(\Illuminate\Http\UploadedFile $file, ?string $alt = null): array
+    {
+        $url = rtrim($this->baseUrl, '/') . '/api/internal/media';
+
+        $response = Http::withHeaders([
+            'X-Internal-Api-Key' => $this->apiKey,
+            'Accept' => 'application/json',
+        ])->withoutVerifying()
+          ->timeout(30)
+          ->attach('file', fopen($file->getPathname(), 'r'), $file->getClientOriginalName())
+          ->post($url, array_filter(['alt' => $alt]));
+
+        if ($response->successful()) {
+            return ['success' => true, 'data' => $response->json('data') ?? $response->json()];
+        }
+
+        return ['success' => false, 'status' => $response->status(), 'body' => $response->json()];
+    }
+
+    public function updateMedia(int $id, array $data): array
+    {
+        $response = $this->request('PATCH', "/api/internal/media/{$id}", [], $data);
+
+        if ($response->successful()) {
+            return ['success' => true, 'data' => $response->json('data') ?? $response->json()];
+        }
+
+        return ['success' => false, 'status' => $response->status(), 'body' => $response->json()];
+    }
+
+    public function deleteMedia(int $id): bool
+    {
+        return $this->request('DELETE', "/api/internal/media/{$id}")->successful();
+    }
+
     // Categories
 
     public function getCategories(): array

@@ -41,6 +41,12 @@ class ManagePosts extends Page
     public array $categories = [];
     public array $tags = [];
 
+    // Media picker
+    public array $pickerMedia = [];
+    public array $pickerMeta = [];
+    public int $pickerPage = 1;
+    public string $pickerSearch = '';
+
     public function mount(): void
     {
         $this->loadDropdowns();
@@ -203,6 +209,66 @@ class ManagePosts extends Page
         } else {
             Notification::make()->title('Failed to delete post')->danger()->send();
         }
+    }
+
+    public function openMediaPicker(): void
+    {
+        $this->pickerPage = 1;
+        $this->pickerSearch = '';
+        $this->loadPickerMedia();
+    }
+
+    public function loadPickerMedia(): void
+    {
+        $query = [
+            'page' => $this->pickerPage,
+            'per_page' => 12,
+        ];
+
+        if ($this->pickerSearch !== '') {
+            $query['search'] = $this->pickerSearch;
+        }
+
+        $result = app(BlogApiService::class)->getMedia($query);
+
+        $this->pickerMedia = $result['data'] ?? [];
+        $this->pickerMeta = $result['meta'] ?? [];
+    }
+
+    public function updatedPickerSearch(): void
+    {
+        $this->pickerPage = 1;
+        $this->loadPickerMedia();
+    }
+
+    public function pickerNextPage(): void
+    {
+        if ($this->pickerPage < ($this->pickerMeta['last_page'] ?? 1)) {
+            $this->pickerPage++;
+            $this->loadPickerMedia();
+        }
+    }
+
+    public function pickerPrevPage(): void
+    {
+        if ($this->pickerPage > 1) {
+            $this->pickerPage--;
+            $this->loadPickerMedia();
+        }
+    }
+
+    public function selectMedia(int $id): void
+    {
+        $media = collect($this->pickerMedia)->firstWhere('id', $id);
+        if (!$media) {
+            return;
+        }
+
+        $alt = $media['alt'] ?? $media['filename'];
+        $url = $media['variant_urls']['large'] ?? $media['url'];
+
+        $this->dispatch('insert-markdown-image', alt: $alt, url: $url);
+        $this->dispatch('close-modal', id: 'media-picker-modal');
     }
 
     private function resetPostForm(): void
