@@ -50,6 +50,11 @@ return [
         'internal_api_key' => env('ANALYTICS_INTERNAL_API_KEY'),
     ],
 
+    'frontend' => [
+        'url' => env('FRONTEND_API_URL_INTERNAL', 'http://frontend-nginx'),
+        'api_key' => env('FRONTEND_INTERNAL_API_KEY'),
+    ],
+
     'sso' => [
         'url' => env('SSO_URL', 'https://sso.microservices.local'),
         'internal_url' => env('SSO_INTERNAL_URL', 'http://sso-nginx'),
