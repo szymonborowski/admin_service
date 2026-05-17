@@ -3,3 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+
+images:
+  - name: ghcr.io/szymonborowski/portfolio-admin
+    newTag: v0.7.0
