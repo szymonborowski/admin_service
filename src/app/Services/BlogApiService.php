@@ -224,6 +224,19 @@ class BlogApiService
         return $this->request('DELETE', "/api/internal/tags/{$id}")->successful();
     }
 
+    // Authors
+
+    public function getAuthors(): array
+    {
+        $response = $this->request('GET', '/api/internal/authors');
+
+        if ($response->successful()) {
+            return $response->json('data') ?? [];
+        }
+
+        return [];
+    }
+
     private function request(string $method, string $path, array $query = [], array $data = []): Response
     {
         $url = rtrim($this->baseUrl, '/') . $path;

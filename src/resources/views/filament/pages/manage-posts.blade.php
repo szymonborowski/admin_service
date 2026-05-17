@@ -235,8 +235,20 @@
                     @error('postContent') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Status + Published At + Locale --}}
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {{-- Author + Status + Locale + Published At --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Author</label>
+                        <select
+                            wire:model.live="postAuthorId"
+                            class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm"
+                        >
+                            <option value="">— Select author —</option>
+                            @foreach($authors as $author)
+                                <option value="{{ $author['id'] }}">{{ $author['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Status <span class="text-red-500">*</span></label>
                         <select

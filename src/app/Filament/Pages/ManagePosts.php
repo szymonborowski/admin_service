@@ -34,12 +34,14 @@ class ManagePosts extends Page
     public string $postStatus = 'draft';
     public string $postLocale = 'pl';
     public string $postPublishedAt = '';
+    public string $postAuthorId = '';
     public array $postCategoryIds = [];
     public array $postTagIds = [];
 
     // Dropdowns
     public array $categories = [];
     public array $tags = [];
+    public array $authors = [];
 
     // Media picker
     public array $pickerMedia = [];
@@ -58,6 +60,7 @@ class ManagePosts extends Page
         $service = app(BlogApiService::class);
         $this->categories = $service->getCategories();
         $this->tags = $service->getTags();
+        $this->authors = $service->getAuthors();
     }
 
     public function loadPosts(): void
@@ -142,6 +145,7 @@ class ManagePosts extends Page
             ? \Carbon\Carbon::parse($post['published_at'])->format('Y-m-d\TH:i')
             : '';
         $this->postLocale = $post['locale'] ?? 'pl';
+        $this->postAuthorId = (string) ($post['author']['id'] ?? '');
         $this->postCategoryIds = collect($post['categories'] ?? [])->pluck('id')->map(fn($id) => (string) $id)->toArray();
         $this->postTagIds = collect($post['tags'] ?? [])->pluck('id')->map(fn($id) => (string) $id)->toArray();
 
@@ -173,6 +177,7 @@ class ManagePosts extends Page
             'status'       => $this->postStatus,
             'locale'       => $this->postLocale,
             'published_at' => $this->postPublishedAt ?: null,
+            'author_id'    => $this->postAuthorId !== '' ? intval($this->postAuthorId) : null,
             'category_ids' => array_map('intval', $this->postCategoryIds),
             'tag_ids'      => array_map('intval', $this->postTagIds),
         ];
@@ -281,6 +286,7 @@ class ManagePosts extends Page
         $this->postStatus = 'draft';
         $this->postLocale = 'pl';
         $this->postPublishedAt = '';
+        $this->postAuthorId = '';
         $this->postCategoryIds = [];
         $this->postTagIds = [];
     }
