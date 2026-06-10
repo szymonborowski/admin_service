@@ -58,7 +58,8 @@ spec:
         - name: mysql
           image: mysql:8
           args:
-            - --innodb-buffer-pool-size=128M
+            - --performance-schema=OFF
+            - --innodb-buffer-pool-size=32M
           ports:
             - containerPort: 3306
               name: mysql
@@ -80,7 +81,7 @@ spec:
           resources:
             requests:
               cpu: 10m
-              memory: 256Mi
+              memory: 128Mi
             limits:
               memory: 1Gi
           volumeMounts:
